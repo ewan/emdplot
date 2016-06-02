@@ -1,10 +1,10 @@
 Package: emdplot
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1
+Title: Histograms and Other Useful Plots Using ggplot2
+Version: 1.0
 Date: 2016-06-02
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Ewan Dunbar
+Maintainer: Ewan Dunbar <emd@umd.edu>
+Description: Plots and palettes I've found useful in my papers
+License: GPLv3
 LazyData: TRUE
