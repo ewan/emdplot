@@ -8,3 +8,4 @@ Maintainer: Ewan Dunbar <emd@umd.edu>
 Description: Plots and palettes I've found useful in my papers
 License: GPLv3
 LazyData: TRUE
+Depends: ggplot2

@@ -26,6 +26,8 @@ ALL_COLOURS <- c(LIGHTEST_COLOURS, LIGHT_COLOURS, DARK_COLOURS, DARKEST_COLOURS)
 #' @param var A categorical variable with no more than eight unique values; if
 #' it is a factor then the color palette will follow the order of the factor levels
 #' from light to dark
+#' @return A named vector of colours
+#' @export
 emd_palette <- function(var) {
   if (!is.factor(var)) {
     var <- factor(var)
@@ -56,6 +58,7 @@ emd_palette <- function(var) {
 #'
 #' @param text_size Text size (default: 18)
 #' @return A ggplot theme object
+#' @export
 emd_theme <- function(text_size=18) {
   return(theme_bw() + theme(text=element_text(size=text_size),
                             legend.position="bottom"))
@@ -75,6 +78,7 @@ emd_theme <- function(text_size=18) {
 #' @param y_type "density", "ndensity", "count", or "ncount": density estimate, density estimate
 #' scaled to maximum of one, count, or count normalized to maximum of one
 #' @return A ggplot plot object
+#' @export
 hist_area_line <- function(x, group=NULL, colour_palette=emd_palette(group),
                       var_measure_name="x", var_group_name="group",
                       line_width=3, highlight_all=F, y_type="count") {
@@ -96,7 +100,7 @@ hist_area_line <- function(x, group=NULL, colour_palette=emd_palette(group),
     line_levs <- levels(d$group)
   }
   for (lev in line_levs) {
-    d_lev <- dplyr::filter(d, group == lev)
+    d_lev <- d[d$group == lev,]
     p <- p + stat_bin(data=d_lev, aes_string(y=y_str_sbin), position="identity",
                       geom="line", colour="black", lwd=line_width)
     p <- p + stat_bin(data=d_lev, aes_string(y=y_str_sbin), position="identity",
