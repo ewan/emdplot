@@ -158,5 +158,6 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
                           alpha=0, lwd=min(1, line_width/2.), colour="black")
   p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
   p <- p + xlab(var_measure_name)
+  p <- p + ylab("Count")
   return(p)
 }
