@@ -139,7 +139,7 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
   }
   d <- data.frame(x=x, group=factor(group))
   d <- d[!is.na(d$x),]
-  p <- ggplot(d, aes(x=x))
+  p <- ggplot(d, aes(x=x, fill=group))
   p <- p + geom_histogram(position="identity", alpha=0.2, bins=bins)
   p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
                              breaks=levels(d$group))
