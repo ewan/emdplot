@@ -78,9 +78,9 @@ emd_theme <- function(text_size=18) {
 #' scaled to maximum of one, count, or count normalized to maximum of one
 #' @return A ggplot plot object
 #' @export
-hist_area_line <- function(x, group=NULL, colour_palette=emd_palette(group),
-                      var_measure_name="x", var_group_name="group",
-                      line_width=3, highlight_all=F, y_type="count") {
+hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="group",
+                           colour_palette=emd_palette(group), line_width=3,
+                           highlight_all=F, y_type="count") {
   y_str_sbin <- paste0("..", y_type, "..")
   if (!is.null(names(colour_palette))) {
     group <- factor(group, levels=names(colour_palette))
@@ -132,9 +132,8 @@ hist_area_line <- function(x, group=NULL, colour_palette=emd_palette(group),
 #' @param line_width Line width
 #' @return A ggplot plot object
 #' @export
-hist_overlapping <- function(x, group=NULL, colour_palette=emd_palette(group),
-                           var_measure_name="x", var_group_name="group",
-                           line_width=3, bins=30) {
+hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name="group",
+                           colour_palette=emd_palette(group), line_width=3, bins=30) {
   if (!is.null(names(colour_palette))) {
     group <- factor(group, levels=names(colour_palette))
   }
@@ -142,17 +141,13 @@ hist_overlapping <- function(x, group=NULL, colour_palette=emd_palette(group),
   d <- d[!is.na(d$x),]
   p <- ggplot(d, aes(x=x))
   p <- p + geom_histogram(position="identity", alpha=0.2, bins=bins)
-  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name)
+  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
+                             breaks=levels(d$group))
   p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
                           alpha=0, lwd=line_width)
   p <- p + geom_histogram(position="identity", aes(group=group), bins=bins,
                           alpha=0, lwd=1, colour="black")
   p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
   p <- p + xlab(var_measure_name)
-
-  p <- p + stat_bin(aes_string(y=y_str_sbin, fill="group"),
-                    position='identity', geom="area", colour="black", lwd=0.4*line_width)
-  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
-                             breaks=levels(d$group))
   return(p)
 }
