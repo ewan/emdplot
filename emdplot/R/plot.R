@@ -86,7 +86,7 @@ hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="
     group <- factor(group, levels=names(colour_palette))
   }
   d <- data.frame(x=x, group=factor(group))
-  if (!is.null(additional_vars) & is.data.frame(additional_vars) &
+  if (!is.null(additional_vars) && is.data.frame(additional_vars) &&
       nrow(additional_vars) == nrow(d)) {
     d <- cbind(d, additional_vars)
   }
@@ -143,7 +143,7 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
     group <- factor(group, levels=names(colour_palette))
   }
   d <- data.frame(x=x, group=factor(group))
-  if (!is.null(additional_vars) & is.data.frame(additional_vars) &
+  if (!is.null(additional_vars) && is.data.frame(additional_vars) &&
       nrow(additional_vars) == nrow(d)) {
     d <- cbind(d, additional_vars)
   }
