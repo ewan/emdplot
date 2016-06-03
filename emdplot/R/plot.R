@@ -121,3 +121,39 @@ hist_area_line <- function(x, group=NULL, colour_palette=emd_palette(group),
   }
   return(p)
 }
+
+#' Returns a ggplot containing overlapping histograms for different groups
+#'
+#' @param x A variable to plot
+#' @param group grouping variable
+#' @param colour_palette A vector containing the colours for each group; if this vector is named
+#' then the order of the names will be used to order the groups on the plot
+#' @param var_measure_name An display label for the dependent variable
+#' @param var_group_name An display label for the group variable
+#' @param line_width Line width
+#' @return A ggplot plot object
+#' @export
+hist_overlapping <- function(x, group=NULL, colour_palette=emd_palette(group),
+                           var_measure_name="x", var_group_name="group",
+                           line_width=3, bins=30) {
+  if (!is.null(names(colour_palette))) {
+    group <- factor(group, levels=names(colour_palette))
+  }
+  d <- data.frame(x=x, group=factor(group))
+  d <- d[!is.na(d$x),]
+  p <- ggplot(d, aes(x=x))
+  p <- p + geom_histogram(position="identity", alpha=0.2, bins=bins)
+  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name)
+  p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
+                          alpha=0, lwd=line_width)
+  p <- p + geom_histogram(position="identity", aes(group=group), bins=bins,
+                          alpha=0, lwd=1, colour="black")
+  p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
+  p <- p + xlab(var_measure_name)
+
+  p <- p + stat_bin(aes_string(y=y_str_sbin, fill="group"),
+                    position='identity', geom="area", colour="black", lwd=0.4*line_width)
+  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
+                             breaks=levels(d$group))
+  return(p)
+}
