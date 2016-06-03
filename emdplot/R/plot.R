@@ -80,12 +80,16 @@ emd_theme <- function(text_size=18) {
 #' @export
 hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="group",
                            colour_palette=emd_palette(group), line_width=3,
-                           highlight_all=F, y_type="count") {
+                           highlight_all=F, y_type="count", additional_vars=NULL) {
   y_str_sbin <- paste0("..", y_type, "..")
   if (!is.null(names(colour_palette))) {
     group <- factor(group, levels=names(colour_palette))
   }
   d <- data.frame(x=x, group=factor(group))
+  if (!is.null(additional_vars) & is.data.frame(additional_vars) &
+      nrow(additional_vars) == nrow(d)) {
+    d <- cbind(d, additional_vars)
+  }
   d <- d[!is.na(d$x),]
 
   p <- ggplot(d, aes(x=x))
@@ -133,14 +137,19 @@ hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="
 #' @return A ggplot plot object
 #' @export
 hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name="group",
-                           colour_palette=emd_palette(group), line_width=3, bins=30) {
+                            colour_palette=emd_palette(group), line_width=3, bins=30,
+                            additional_vars=NULL) {
   if (!is.null(names(colour_palette))) {
     group <- factor(group, levels=names(colour_palette))
   }
   d <- data.frame(x=x, group=factor(group))
+  if (!is.null(additional_vars) & is.data.frame(additional_vars) &
+      nrow(additional_vars) == nrow(d)) {
+    d <- cbind(d, additional_vars)
+  }
   d <- d[!is.na(d$x),]
   p <- ggplot(d, aes(x=x, fill=group))
-  p <- p + geom_histogram(position="identity", alpha=0.2, bins=bins)
+  p <- p + geom_histogram(position="identity", alpha=0.15, bins=bins)
   p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
                              breaks=levels(d$group))
   p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
