@@ -142,17 +142,13 @@ hist_overlapping <- function(x, group=NULL, colour_palette=emd_palette(group),
   d <- d[!is.na(d$x),]
   p <- ggplot(d, aes(x=x))
   p <- p + geom_histogram(position="identity", alpha=0.2, bins=bins)
-  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name)
+  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
+                             breaks=levels(d$group))
   p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
                           alpha=0, lwd=line_width)
   p <- p + geom_histogram(position="identity", aes(group=group), bins=bins,
                           alpha=0, lwd=1, colour="black")
   p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
   p <- p + xlab(var_measure_name)
-
-  p <- p + stat_bin(aes_string(y=y_str_sbin, fill="group"),
-                    position='identity', geom="area", colour="black", lwd=0.4*line_width)
-  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
-                             breaks=levels(d$group))
   return(p)
 }
