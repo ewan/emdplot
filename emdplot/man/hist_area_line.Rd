@@ -2,8 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{hist_area_line}
 \alias{hist_area_line}
-\title{Returns a ggplot containing overlapping histograms for different groups, filled
-in with areas and with a thick line over top}
+\title{Overlapping histograms with areas and a thick line}
 \usage{
 hist_area_line(x, group = NULL, colour_palette = emd_palette(group),
   var_measure_name = "x", var_group_name = "group", line_width = 3,
@@ -32,7 +31,6 @@ scaled to maximum of one, count, or count normalized to maximum of one}
 A ggplot plot object
 }
 \description{
-Returns a ggplot containing overlapping histograms for different groups, filled
-in with areas and with a thick line over top
+Overlapping histograms with areas and a thick line
 }
 

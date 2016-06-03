@@ -20,13 +20,13 @@ DARK_COLOURS <- c(DARK_BLUE, DARK_MAROON)
 DARKEST_COLOURS <- c(DARKEST_GREY, DARKEST_PURPLE)
 ALL_COLOURS <- c(LIGHTEST_COLOURS, LIGHT_COLOURS, DARK_COLOURS, DARKEST_COLOURS)
 
-#' A contrastive palette ranging from light to dark; if there are two colours
-#' then they are orange (light) and blue (dark)
+#' A contrastive palette ranging from light to dark
 #'
 #' @param var A categorical variable with no more than eight unique values; if
 #' it is a factor then the color palette will follow the order of the factor levels
 #' from light to dark
-#' @return A named vector of colours
+#' @return A named vector of colours; if there are two colours
+#' then they are orange (light) and blue (dark)
 #' @export
 emd_palette <- function(var) {
   if (!is.factor(var)) {
@@ -64,8 +64,7 @@ emd_theme <- function(text_size=18) {
                             legend.position="bottom"))
 }
 
-#' Returns a ggplot containing overlapping histograms for different groups, filled
-#' in with areas and with a thick line over top
+#' Overlapping histograms with areas and a thick line
 #'
 #' @param x A variable to plot
 #' @param group grouping variable
@@ -122,7 +121,7 @@ hist_area_line <- function(x, group=NULL, colour_palette=emd_palette(group),
   return(p)
 }
 
-#' Returns a ggplot containing overlapping histograms for different groups
+#' Overlapping histograms
 #'
 #' @param x A variable to plot
 #' @param group grouping variable

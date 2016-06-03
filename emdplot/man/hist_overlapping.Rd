@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{hist_overlapping}
 \alias{hist_overlapping}
-\title{Returns a ggplot containing overlapping histograms for different groups}
+\title{Overlapping histograms}
 \usage{
 hist_overlapping(x, group = NULL, colour_palette = emd_palette(group),
   var_measure_name = "x", var_group_name = "group", line_width = 3,
@@ -26,6 +26,6 @@ then the order of the names will be used to order the groups on the plot}
 A ggplot plot object
 }
 \description{
-Returns a ggplot containing overlapping histograms for different groups
+Overlapping histograms
 }
 

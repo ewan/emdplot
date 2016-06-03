@@ -2,8 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{emd_palette}
 \alias{emd_palette}
-\title{A contrastive palette ranging from light to dark; if there are two colours
-then they are orange (light) and blue (dark)}
+\title{A contrastive palette ranging from light to dark}
 \usage{
 emd_palette(var)
 }
@@ -13,10 +12,10 @@ it is a factor then the color palette will follow the order of the factor levels
 from light to dark}
 }
 \value{
-A named vector of colours
+A named vector of colours; if there are two colours
+then they are orange (light) and blue (dark)
 }
 \description{
-A contrastive palette ranging from light to dark; if there are two colours
-then they are orange (light) and blue (dark)
+A contrastive palette ranging from light to dark
 }
 
