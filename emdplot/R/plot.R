@@ -155,7 +155,7 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
   p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
                           alpha=0, lwd=line_width)
   p <- p + geom_histogram(position="identity", aes(group=group), bins=bins,
-                          alpha=0, lwd=1, colour="black")
+                          alpha=0, lwd=min(1, line_width/2.), colour="black")
   p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
   p <- p + xlab(var_measure_name)
   return(p)
