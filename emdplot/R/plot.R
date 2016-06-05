@@ -157,24 +157,39 @@ hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="
 hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name="group",
                             colour_palette=emd_palette(group), line_width=3, bins=30,
                             additional_vars=NULL) {
-  if (!is.null(names(colour_palette))) {
-    group <- factor(group, levels=names(colour_palette))
+  if (!is.null(group)) {
+    if (!is.null(names(colour_palette))) {
+      group <- factor(group, levels=names(colour_palette))
+    }
+    d <- data.frame(x=x, group=factor(group))
+  } else {
+    d <- data.frame(x=x)
   }
-  d <- data.frame(x=x, group=factor(group))
   if (!is.null(additional_vars) && is.data.frame(additional_vars) &&
       nrow(additional_vars) == nrow(d)) {
     d <- cbind(d, additional_vars)
   }
-  d <- d[!is.na(d$x),]
-  p <- ggplot(d, aes(x=x, fill=group))
+  d <- d[!is.na(d$x),,drop=F]
+  if (!is.null(group)) {
+    p <- ggplot(d, aes(x=x, fill=group))
+  } else {
+    p <- ggplot(d, aes(x=x))
+  }
   p <- p + geom_histogram(position="identity", alpha=0.15, bins=bins)
-  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
-                             breaks=levels(d$group))
-  p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
-                          alpha=0, lwd=line_width)
-  p <- p + geom_histogram(position="identity", aes(group=group), bins=bins,
-                          alpha=0, lwd=min(1, line_width/2.), colour="black")
-  p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
+  if (!is.null(group)) {
+    p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
+                               breaks=levels(d$group))
+    p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
+                            alpha=0, lwd=line_width)
+    p <- p + geom_histogram(position="identity", aes(group=group), bins=bins,
+                            alpha=0, lwd=min(1, line_width/2.), colour="black")
+    p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
+  } else {
+    p <- p + geom_histogram(position="identity", colour=emd_colours()$dark$blue, bins=bins,
+                            alpha=0, lwd=line_width)
+    p <- p + geom_histogram(position="identity", bins=bins,
+                            alpha=0, lwd=min(1, line_width/2.), colour="black")
+  }
   p <- p + xlab(var_measure_name)
   p <- p + ylab("Count")
   return(p)
