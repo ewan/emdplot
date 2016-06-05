@@ -194,3 +194,102 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
   p <- p + ylab("Count")
   return(p)
 }
+
+#'@export
+linear_2x2_sumcode_barplot <- function(b0, bx1, bx2, bx1x2,
+                                       x1="x1", x1A="A", x1B="B",
+                                       x2="x2", x2A="A", x2B="B") {
+  d0 <- rbind(data.frame(cell="Grand mean", prediction=b0, component="β0", type="Coefficient"),
+              data.frame(cell="Grand mean", prediction=b0, component="Sum", type="Prediction"))
+  x1a_name <- paste0(x1, ": ", x1A)
+  bx1_name <- paste0("β_", x1)
+  dx1A <- do.call("rbind", list(data.frame(cell=x1a_name, prediction=b0, component="β0",type="Coefficient"),
+                data.frame(cell=x1a_name, prediction=bx1, component=bx1_name, type="Coefficient"),
+                data.frame(cell=x1a_name, prediction=b0+bx1, component="Sum", type="Prediction")
+                ))
+  x1b_name <- paste0(x1, ": ", x1B)
+  dx1B <- do.call("rbind", list(data.frame(cell=x1b_name, prediction=b0, component="β0", type="Coefficient"),
+                data.frame(cell=x1b_name, prediction=-bx1, component=bx1_name, type="Coefficient"),
+                data.frame(cell=x1b_name, prediction=b0-bx1, component="Sum", type="Prediction")
+                ))
+  x2a_name <- paste0(x2, ": ", x2A)
+  bx2_name <- paste0("β_", x2)
+  dx2A <- do.call("rbind", list(data.frame(cell=x2a_name, prediction=b0, component="β0", type="Coefficient"),
+                data.frame(cell=x2a_name, prediction=bx2, component=bx2_name, type="Coefficient"),
+                data.frame(cell=x2a_name, prediction=b0+bx2, component="Sum", type="Prediction")
+                ))
+  x2b_name <- paste0(x2, ": ", x2B)
+  dx2B <- do.call("rbind", list(data.frame(cell=x2b_name, prediction=b0, component="β0", type="Coefficient"),
+                data.frame(cell=x2b_name, prediction=-bx2, component=bx2_name, type="Coefficient"),
+                data.frame(cell=x2b_name, prediction=b0-bx2, component="Sum", type="Prediction")
+                ))
+  x1ax2a_name <- paste0(x1a_name, " & ", x2a_name)
+  bx1x2_name <- paste0("β_", x1, "_", x2)
+  dx1Ax2A <- do.call("rbind", list(
+    data.frame(cell=x1ax2a_name, prediction=b0,   type="Coefficient", component="β0"),
+    data.frame(cell=x1ax2a_name, prediction=bx1,  type="Coefficient", component=bx1_name),
+    data.frame(cell=x1ax2a_name, prediction=bx2,  type="Coefficient", component=bx2_name),
+    data.frame(cell=x1ax2a_name, prediction=bx1x2,type="Coefficient", component=bx1x2_name),
+    data.frame(cell=x1ax2a_name, prediction=b0+bx1+bx2+bx1x2, component="Sum", type="Prediction")
+    ))
+  x1bx2a_name <- paste0(x1b_name, " & ", x2a_name)
+  dx1Bx2A <- do.call("rbind", list(
+    data.frame(cell=x1bx2a_name, prediction=b0,    type="Coefficient", component="β0"),
+    data.frame(cell=x1bx2a_name, prediction=-bx1,  type="Coefficient", component=bx1_name),
+    data.frame(cell=x1bx2a_name, prediction=bx2,   type="Coefficient", component=bx2_name),
+    data.frame(cell=x1bx2a_name, prediction=-bx1x2,type="Coefficient", component=bx1x2_name),
+    data.frame(cell=x1bx2a_name, prediction=b0+bx1-bx2-bx1x2, component="Sum", type="Prediction")
+    ))
+  x1ax2b_name <- paste0(x1a_name, " & ", x2b_name)
+  dx1Ax2B <- do.call("rbind", list(
+    data.frame(cell=x1ax2b_name, prediction=b0,    type="Coefficient", component="β0"),
+    data.frame(cell=x1ax2b_name, prediction=bx1,   type="Coefficient", component=bx1_name),
+    data.frame(cell=x1ax2b_name, prediction=-bx2,  type="Coefficient", component=bx2_name),
+    data.frame(cell=x1ax2b_name, prediction=-bx1x2,type="Coefficient", component=bx1x2_name),
+    data.frame(cell=x1ax2b_name, prediction=b0+bx1-bx2-bx1x2, component="Sum", type="Prediction")
+    ))
+  x1bx2b_name <- paste0(x1b_name, " & ", x2b_name)
+  dx1Bx2B <- do.call("rbind", list(
+    data.frame(cell=x1bx2b_name, prediction=b0,   type="Coefficient", component="β0"),
+    data.frame(cell=x1bx2b_name, prediction=-bx1, type="Coefficient", component=bx1_name),
+    data.frame(cell=x1bx2b_name, prediction=-bx2, type="Coefficient", component=bx2_name),
+    data.frame(cell=x1bx2b_name, prediction=bx1x2,type="Coefficient", component=bx1x2_name),
+    data.frame(cell=x1bx2b_name, prediction=b0-bx1-bx2+bx1x2, component="Sum", type="Prediction")
+    ))
+  d <- do.call("rbind", list(d0, dx1A, dx1B, dx2A, dx2B, dx1Ax2A, dx1Bx2A,
+                             dx1Ax2B, dx1Bx2B))
+  d$component <- factor(d$component, c("β0", bx1_name, bx2_name, bx1x2_name, "Sum"))
+  d_pos <- d[d$prediction >= 0,]
+  d_neg <- d[d$prediction < 0,]
+  p <- ggplot()
+  p <- p + geom_bar(data=d_pos, aes(x=type, fill=component, y=prediction),
+                    stat="identity", position="stack", lwd=1, colour="black")
+  p <- p + geom_bar(data=d_neg, aes(x=type, fill=component, y=prediction),
+                    stat="identity", position="stack", lwd=1, colour="black")
+  p <- p + geom_hline(yintercept=0, lwd=1.5)
+  p <- p + scale_fill_manual(values=emd_palette(d$component), name="Model component")
+  p <- p + facet_wrap(~ cell, ncol=9)
+  p <- p + xlab("Case")
+  p <- p + ylab("Model coefficient/prediction value")
+  return(p)
+}
+
+#'@export
+linear_2x2_sumcode_sum_barplot <- function(b0, bx1, bx2, bx1x2) {
+  d0 <- data.frame(cell="Grand mean", prediction=b0)
+  dx1A <- data.frame(cell="x1A", prediction=b0+bx1)
+  dx1B <- data.frame(cell="x1B", prediction=b0-bx1)
+  dx2A <- data.frame(cell="x2A", prediction=b0+bx2)
+  dx2B <- data.frame(cell="x2B", prediction=b0-bx2)
+  dx1Ax2A <- data.frame(cell="x1Ax2A", prediction=b0+bx1+bx2+bx1x2)
+  dx1Bx2A <- data.frame(cell="x1Bx2A", prediction=b0-bx1+bx2-bx1x2)
+  dx1Ax2B <- data.frame(cell="x1Ax2B", prediction=b0+bx1-bx2-bx1x2)
+  dx1Bx2B <- data.frame(cell="x1Bx2B", prediction=b0-bx1-bx2+bx1x2)
+  d <- do.call("rbind", list(d0, dx1A, dx1B, dx2A, dx2B, dx1Ax2A, dx1Bx2A,
+                             dx1Ax2B, dx1Bx2B))
+  p <- ggplot(data=d, aes(x=cell, y=prediction))
+  p <- p + geom_bar(stat="identity", position="stack")
+  p <- p + geom_hline(yintercept=0)
+  return(p)
+}
+
