@@ -4,21 +4,22 @@
 \alias{hist_area_line}
 \title{Overlapping histograms with areas and a thick line}
 \usage{
-hist_area_line(x, group = NULL, colour_palette = emd_palette(group),
-  var_measure_name = "x", var_group_name = "group", line_width = 3,
-  highlight_all = F, y_type = "count")
+hist_area_line(x, group = NULL, var_measure_name = "x",
+  var_group_name = "group", colour_palette = emd_palette(group),
+  line_width = 3, highlight_all = F, y_type = "count",
+  additional_vars = NULL)
 }
 \arguments{
 \item{x}{A variable to plot}
 
 \item{group}{grouping variable}
 
-\item{colour_palette}{A vector containing the colours for each group; if this vector is named
-then the order of the names will be used to order the groups on the plot}
-
 \item{var_measure_name}{An display label for the dependent variable}
 
 \item{var_group_name}{An display label for the group variable}
+
+\item{colour_palette}{A vector containing the colours for each group; if this vector is named
+then the order of the names will be used to order the groups on the plot}
 
 \item{line_width}{Line width}
 

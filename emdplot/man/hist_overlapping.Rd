@@ -4,21 +4,21 @@
 \alias{hist_overlapping}
 \title{Overlapping histograms}
 \usage{
-hist_overlapping(x, group = NULL, colour_palette = emd_palette(group),
-  var_measure_name = "x", var_group_name = "group", line_width = 3,
-  bins = 30)
+hist_overlapping(x, group = NULL, var_measure_name = "x",
+  var_group_name = "group", colour_palette = emd_palette(group),
+  line_width = 3, bins = 30, additional_vars = NULL)
 }
 \arguments{
 \item{x}{A variable to plot}
 
 \item{group}{grouping variable}
 
-\item{colour_palette}{A vector containing the colours for each group; if this vector is named
-then the order of the names will be used to order the groups on the plot}
-
 \item{var_measure_name}{An display label for the dependent variable}
 
 \item{var_group_name}{An display label for the group variable}
+
+\item{colour_palette}{A vector containing the colours for each group; if this vector is named
+then the order of the names will be used to order the groups on the plot}
 
 \item{line_width}{Line width}
 }

@@ -1,24 +1,32 @@
-LIGHT_ORANGE <- "#E69F00"
-LIGHTEST_ORANGE <- "#FFD26C"
-LIGHT_BROWN <- "#B69070"
-DARK_BLUE <- "#005EA2"
-LIGHT_BLUE <- "#4E89B2"
-DARKEST_GREY <- "#444444"
-LIGHTEST_YELLOW <- "#FFFE59"
-DARKEST_MAROON <- "#6A0000"
-DARK_MAROON <- "#A44444"
-LIGHTEST_GREEN <- "#C0D4A2"
-LIGHTEST_BLUE <- "#BBDDF0"
-DARKEST_PURPLE <- "#370460"
-LIGHTEST_MAGENTA <- "#FFE0D7"
-LIGHT_TURQUOISE <- "#28D1C1"
-LIGHTEST_TURQUOISE <- "#D1EBE9"
-
-LIGHTEST_COLOURS <- c(LIGHTEST_ORANGE, LIGHTEST_YELLOW, LIGHTEST_GREEN, LIGHTEST_BLUE)
-LIGHT_COLOURS <- c(LIGHT_TURQUOISE, LIGHT_ORANGE, LIGHT_BROWN, LIGHT_BLUE)
-DARK_COLOURS <- c(DARK_BLUE, DARK_MAROON)
-DARKEST_COLOURS <- c(DARKEST_GREY, DARKEST_PURPLE)
-ALL_COLOURS <- c(LIGHTEST_COLOURS, LIGHT_COLOURS, DARK_COLOURS, DARKEST_COLOURS)
+#' The colours I use
+#'@return A list of lists of colours, organized by darkness level
+#'@export
+emd_colours <- function() {
+  list(
+    lightest=list(
+      turquoise="#D1EBE9",
+      magenta="#FFE0D7",
+      green="#C0D4A2",
+      blue="#BBDDF0",
+      yellow="#FFFE59",
+      orange="#FFD26C"
+    ),
+    light=list(
+      turquoise="#28D1C1",
+      blue="#4E89B2",
+      orange="#E69F00",
+      brown="#B69070"
+    ),
+    dark=list(
+      blue="#005EA2",
+      maroon="#A44444"
+    ),
+    darkest=list(
+      grey="#444444",
+      maroon="#6A0000",
+      purple="#370460"
+    ))
+}
 
 #' A contrastive palette ranging from light to dark
 #'
@@ -33,23 +41,33 @@ emd_palette <- function(var) {
     var <- factor(var)
   }
   if (length(levels(var)) == 2) {
-    result <- c(LIGHT_ORANGE, DARK_BLUE)
+    result <- c(emd_colours()$light$orange, emd_colours()$dark$blue)
   } else if (length(levels(var)) == 3) {
-    result <- c(LIGHTEST_ORANGE, DARK_BLUE, DARKEST_GREY)
+    result <- c(emd_colours()$lightest$orange, emd_colours()$dark$blue,
+                emd_colours()$darkest$grey)
   } else if (length(levels(var)) == 4) {
-    result <- c(LIGHTEST_ORANGE, LIGHT_TURQUOISE, DARK_BLUE, DARKEST_GREY)
+    result <- c(emd_colours()$lightest$orange,
+                emd_colours()$light$turquoise,
+                emd_colours()$dark$blue,
+                emd_colours()$darkest$grey)
   } else if (length(levels(var)) == 5) {
-    result <- c(LIGHTEST_ORANGE, LIGHT_TURQUOISE, DARK_BLUE, DARKEST_GREY,
-                LIGHTEST_GREEN)
+    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
+                emd_colours()$dark$blue, emd_colours()$darkest$grey,
+                emd_colours()$lightest$green)
   } else if (length(levels(var)) == 6) {
-    result <- c(LIGHTEST_ORANGE, LIGHT_TURQUOISE, DARK_BLUE, DARKEST_GREY,
-                LIGHTEST_GREEN, DARKEST_PURPLE)
+    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
+                emd_colours()$dark$blue, emd_colours()$darkest$grey,
+                emd_colours()$lightest$green, emd_colours()$darkest$purple)
   } else if (length(levels(var)) == 7) {
-    result <- c(LIGHTEST_ORANGE, LIGHT_TURQUOISE, DARK_BLUE, DARKEST_GREY,
-                LIGHTEST_GREEN, DARK_MAROON, DARKEST_PURPLE)
+    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
+                emd_colours()$dark$blue, emd_colours()$darkest$grey,
+                emd_colours()$lightest$green,
+                emd_colours()$dark$maroon, emd_colours()$darkest$purple)
   } else if (length(levels(var)) == 8) {
-    result <- c(LIGHTEST_ORANGE, LIGHT_TURQUOISE, DARK_BLUE, DARKEST_GREY,
-                LIGHTEST_GREEN, LIGHT_ORANGE, DARK_MAROON, DARKEST_PURPLE)
+    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
+                emd_colours()$dark$blue, emd_colours()$darkest$grey,
+                emd_colours()$lightest$green, emd_colours()$light$orange,
+                emd_colours()$dark$maroon, emd_colours()$darkest$purple)
   }
   return(structure(result, names=levels(var)))
 }
