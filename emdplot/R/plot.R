@@ -199,62 +199,62 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
 linear_2x2_sumcode_barplot <- function(b0, bx1, bx2, bx1x2,
                                        x1="x1", x1A="A", x1B="B",
                                        x2="x2", x2A="A", x2B="B") {
-  d0 <- rbind(data.frame(cell="Grand mean", prediction=b0, component="β0", type="Coefficient"),
-              data.frame(cell="Grand mean", prediction=b0, component="Sum", type="Prediction"))
+  d0 <- rbind(data.frame(cell="Grand mean", prediction=b0, component="β0", type="Coef"),
+              data.frame(cell="Grand mean", prediction=b0, component="Sum", type="Pred"))
   x1a_name <- paste0(x1, ": ", x1A)
   bx1_name <- paste0("β_", x1)
-  dx1A <- do.call("rbind", list(data.frame(cell=x1a_name, prediction=b0, component="β0",type="Coefficient"),
-                data.frame(cell=x1a_name, prediction=bx1, component=bx1_name, type="Coefficient"),
-                data.frame(cell=x1a_name, prediction=b0+bx1, component="Sum", type="Prediction")
+  dx1A <- do.call("rbind", list(data.frame(cell=x1a_name, prediction=b0, component="β0",type="Coef"),
+                data.frame(cell=x1a_name, prediction=bx1, component=bx1_name, type="Coef"),
+                data.frame(cell=x1a_name, prediction=b0+bx1, component="Sum", type="Pred")
                 ))
   x1b_name <- paste0(x1, ": ", x1B)
-  dx1B <- do.call("rbind", list(data.frame(cell=x1b_name, prediction=b0, component="β0", type="Coefficient"),
-                data.frame(cell=x1b_name, prediction=-bx1, component=bx1_name, type="Coefficient"),
-                data.frame(cell=x1b_name, prediction=b0-bx1, component="Sum", type="Prediction")
+  dx1B <- do.call("rbind", list(data.frame(cell=x1b_name, prediction=b0, component="β0", type="Coef"),
+                data.frame(cell=x1b_name, prediction=-bx1, component=bx1_name, type="Coef"),
+                data.frame(cell=x1b_name, prediction=b0-bx1, component="Sum", type="Pred")
                 ))
   x2a_name <- paste0(x2, ": ", x2A)
   bx2_name <- paste0("β_", x2)
-  dx2A <- do.call("rbind", list(data.frame(cell=x2a_name, prediction=b0, component="β0", type="Coefficient"),
-                data.frame(cell=x2a_name, prediction=bx2, component=bx2_name, type="Coefficient"),
-                data.frame(cell=x2a_name, prediction=b0+bx2, component="Sum", type="Prediction")
+  dx2A <- do.call("rbind", list(data.frame(cell=x2a_name, prediction=b0, component="β0", type="Coef"),
+                data.frame(cell=x2a_name, prediction=bx2, component=bx2_name, type="Coef"),
+                data.frame(cell=x2a_name, prediction=b0+bx2, component="Sum", type="Pred")
                 ))
   x2b_name <- paste0(x2, ": ", x2B)
-  dx2B <- do.call("rbind", list(data.frame(cell=x2b_name, prediction=b0, component="β0", type="Coefficient"),
-                data.frame(cell=x2b_name, prediction=-bx2, component=bx2_name, type="Coefficient"),
-                data.frame(cell=x2b_name, prediction=b0-bx2, component="Sum", type="Prediction")
+  dx2B <- do.call("rbind", list(data.frame(cell=x2b_name, prediction=b0, component="β0", type="Coef"),
+                data.frame(cell=x2b_name, prediction=-bx2, component=bx2_name, type="Coef"),
+                data.frame(cell=x2b_name, prediction=b0-bx2, component="Sum", type="Pred")
                 ))
-  x1ax2a_name <- paste0(x1a_name, " & ", x2a_name)
+  x1ax2a_name <- paste0(x1a_name, " &\n", x2a_name)
   bx1x2_name <- paste0("β_", x1, "_", x2)
   dx1Ax2A <- do.call("rbind", list(
-    data.frame(cell=x1ax2a_name, prediction=b0,   type="Coefficient", component="β0"),
-    data.frame(cell=x1ax2a_name, prediction=bx1,  type="Coefficient", component=bx1_name),
-    data.frame(cell=x1ax2a_name, prediction=bx2,  type="Coefficient", component=bx2_name),
-    data.frame(cell=x1ax2a_name, prediction=bx1x2,type="Coefficient", component=bx1x2_name),
-    data.frame(cell=x1ax2a_name, prediction=b0+bx1+bx2+bx1x2, component="Sum", type="Prediction")
+    data.frame(cell=x1ax2a_name, prediction=b0,   type="Coef", component="β0"),
+    data.frame(cell=x1ax2a_name, prediction=bx1,  type="Coef", component=bx1_name),
+    data.frame(cell=x1ax2a_name, prediction=bx2,  type="Coef", component=bx2_name),
+    data.frame(cell=x1ax2a_name, prediction=bx1x2,type="Coef", component=bx1x2_name),
+    data.frame(cell=x1ax2a_name, prediction=b0+bx1+bx2+bx1x2, component="Sum", type="Pred")
     ))
-  x1bx2a_name <- paste0(x1b_name, " & ", x2a_name)
+  x1bx2a_name <- paste0(x1b_name, " &\n", x2a_name)
   dx1Bx2A <- do.call("rbind", list(
-    data.frame(cell=x1bx2a_name, prediction=b0,    type="Coefficient", component="β0"),
-    data.frame(cell=x1bx2a_name, prediction=-bx1,  type="Coefficient", component=bx1_name),
-    data.frame(cell=x1bx2a_name, prediction=bx2,   type="Coefficient", component=bx2_name),
-    data.frame(cell=x1bx2a_name, prediction=-bx1x2,type="Coefficient", component=bx1x2_name),
-    data.frame(cell=x1bx2a_name, prediction=b0+bx1-bx2-bx1x2, component="Sum", type="Prediction")
+    data.frame(cell=x1bx2a_name, prediction=b0,    type="Coef", component="β0"),
+    data.frame(cell=x1bx2a_name, prediction=-bx1,  type="Coef", component=bx1_name),
+    data.frame(cell=x1bx2a_name, prediction=bx2,   type="Coef", component=bx2_name),
+    data.frame(cell=x1bx2a_name, prediction=-bx1x2,type="Coef", component=bx1x2_name),
+    data.frame(cell=x1bx2a_name, prediction=b0-bx1+bx2-bx1x2, component="Sum", type="Pred")
     ))
-  x1ax2b_name <- paste0(x1a_name, " & ", x2b_name)
+  x1ax2b_name <- paste0(x1a_name, " &\n", x2b_name)
   dx1Ax2B <- do.call("rbind", list(
-    data.frame(cell=x1ax2b_name, prediction=b0,    type="Coefficient", component="β0"),
-    data.frame(cell=x1ax2b_name, prediction=bx1,   type="Coefficient", component=bx1_name),
-    data.frame(cell=x1ax2b_name, prediction=-bx2,  type="Coefficient", component=bx2_name),
-    data.frame(cell=x1ax2b_name, prediction=-bx1x2,type="Coefficient", component=bx1x2_name),
-    data.frame(cell=x1ax2b_name, prediction=b0+bx1-bx2-bx1x2, component="Sum", type="Prediction")
+    data.frame(cell=x1ax2b_name, prediction=b0,    type="Coef", component="β0"),
+    data.frame(cell=x1ax2b_name, prediction=bx1,   type="Coef", component=bx1_name),
+    data.frame(cell=x1ax2b_name, prediction=-bx2,  type="Coef", component=bx2_name),
+    data.frame(cell=x1ax2b_name, prediction=-bx1x2,type="Coef", component=bx1x2_name),
+    data.frame(cell=x1ax2b_name, prediction=b0+bx1-bx2-bx1x2, component="Sum", type="Pred")
     ))
-  x1bx2b_name <- paste0(x1b_name, " & ", x2b_name)
+  x1bx2b_name <- paste0(x1b_name, " &\n", x2b_name)
   dx1Bx2B <- do.call("rbind", list(
-    data.frame(cell=x1bx2b_name, prediction=b0,   type="Coefficient", component="β0"),
-    data.frame(cell=x1bx2b_name, prediction=-bx1, type="Coefficient", component=bx1_name),
-    data.frame(cell=x1bx2b_name, prediction=-bx2, type="Coefficient", component=bx2_name),
-    data.frame(cell=x1bx2b_name, prediction=bx1x2,type="Coefficient", component=bx1x2_name),
-    data.frame(cell=x1bx2b_name, prediction=b0-bx1-bx2+bx1x2, component="Sum", type="Prediction")
+    data.frame(cell=x1bx2b_name, prediction=b0,   type="Coef", component="β0"),
+    data.frame(cell=x1bx2b_name, prediction=-bx1, type="Coef", component=bx1_name),
+    data.frame(cell=x1bx2b_name, prediction=-bx2, type="Coef", component=bx2_name),
+    data.frame(cell=x1bx2b_name, prediction=bx1x2,type="Coef", component=bx1x2_name),
+    data.frame(cell=x1bx2b_name, prediction=b0-bx1-bx2+bx1x2, component="Sum", type="Pred")
     ))
   d <- do.call("rbind", list(d0, dx1A, dx1B, dx2A, dx2B, dx1Ax2A, dx1Bx2A,
                              dx1Ax2B, dx1Bx2B))
