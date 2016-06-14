@@ -6,7 +6,7 @@
 \usage{
 hist_area_line(x, group = NULL, var_measure_name = "x",
   var_group_name = "group", colour_palette = emd_palette(group),
-  line_width = 3, highlight_all = F, y_type = "count",
+  line_width = 3, highlight_all = F, y_type = "count", bins = 30,
   additional_vars = NULL)
 }
 \arguments{
@@ -27,6 +27,11 @@ then the order of the names will be used to order the groups on the plot}
 
 \item{y_type}{"density", "ndensity", "count", or "ncount": density estimate, density estimate
 scaled to maximum of one, count, or count normalized to maximum of one}
+
+\item{bins}{number of bins}
+
+\item{additional_vars}{additional variables to include in the data for ggplot
+(so that, for example, the variables are visible to ggplot such that you can facet it later)}
 }
 \value{
 A ggplot plot object

@@ -94,12 +94,16 @@ emd_theme <- function(text_size=18) {
 #' @param highlight_all If TRUE, all groups get a thick line, otherise we leave off the top one
 #' @param y_type "density", "ndensity", "count", or "ncount": density estimate, density estimate
 #' scaled to maximum of one, count, or count normalized to maximum of one
+#' @param bins number of bins
+#' @param additional_vars additional variables to include in the data for ggplot
+#' (so that, for example, the variables are visible to ggplot such that you can facet it later)
 #' @return A ggplot plot object
 #' @export
 hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="group",
                            colour_palette=emd_palette(group), line_width=3,
-                           highlight_all=F, y_type="count", additional_vars=NULL) {
+                           highlight_all=F, y_type="count", bins=30, additional_vars=NULL) {
   y_str_sbin <- paste0("..", y_type, "..")
+  binwidth <- (range(x)[2]-range(x)[1])/(bins-1)
   if (!is.null(names(colour_palette))) {
     group <- factor(group, levels=names(colour_palette))
   }
@@ -111,7 +115,7 @@ hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="
   d <- d[!is.na(d$x),]
 
   p <- ggplot(d, aes(x=x))
-  p <- p + stat_bin(aes_string(y=y_str_sbin, fill="group"),
+  p <- p + stat_bin(aes_string(y=y_str_sbin, fill="group"), binwidth=binwidth,
                     position='identity', geom="area", colour="black", lwd=0.4*line_width)
   p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
                              breaks=levels(d$group))
@@ -123,10 +127,10 @@ hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="
   for (lev in line_levs) {
     d_lev <- d[d$group == lev,]
     p <- p + stat_bin(data=d_lev, aes_string(y=y_str_sbin), position="identity",
-                      geom="line", colour="black", lwd=line_width)
+                      geom="line", colour="black", lwd=line_width, binwidth=binwidth)
     p <- p + stat_bin(data=d_lev, aes_string(y=y_str_sbin), position="identity",
                       geom="line", colour=colour_palette[[lev]],
-                      lwd=line_width*0.4)
+                      lwd=line_width*0.4, binwidth=binwidth)
   }
   p <- p + scale_colour_manual(values=colour_palette, name=var_group_name,
                                breaks=levels(d$group))
