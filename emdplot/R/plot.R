@@ -179,7 +179,7 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
   } else {
     p <- ggplot(d, aes(x=x))
   }
-  p <- p + geom_histogram(position="identity", alpha=0.15, bins=bins)
+  p <- p + geom_histogram(position="identity", alpha=0.40, bins=bins)
   if (!is.null(group)) {
     p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
                                breaks=levels(d$group))
