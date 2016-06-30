@@ -1,30 +1,81 @@
+#'Assign factors to groups
+#'@description The \code{\link{emd_colours}} used by
+#'\code{\link{emd_palette}} only yield four distinct grey levels
+#'or colour blind colours, and eight distinct RGB colours,
+#'which repeat down the factor levels, in order. It's
+#'therefore useful (usually crucial) to have a second factor that groups the first
+#'four levels of \code{x} together, the second four, the third
+#'four, and so on, for some factor vector \code{x}.
+#'@param x A vector (if \code{x} is not a factor vector then it
+#'will be cast to one with the default level order)
+#'@param groups A vector of groups of length \code{k}, where
+#'\code{k} is the floor of
+#'the number of levels of \code{x} divided by four, plus one if the number of levels
+#'is not evenly divisible by four; if \code{NULL}, \code{1:k} will be used
+#'@return A vector of length equal to the number of levels of \code{x},
+#'with the levels of \code{x} as labels, containing the appropriate groups for
+#'each level: the first element of \code{groups} will be repeated four times
+#'(or less if there are less than four levels of \code{x}),
+#'then the second level four times (or less if there are less than eight levels of
+#'\code{x}), and so on
+#'@export
+factor_grouped <- function(x, groups=NULL) {
+  if (!is.factor(x)) {
+    x <- factor(x)
+  }
+  nlevels <- length(levels(x))
+  if (nlevels %% 4 == 0) {
+    ngroups <- nlevels/4
+  } else {
+    ngroups <- floor(nlevels/4) + 1
+  }
+  if (!is.null(groups) && length(groups) != ngroups) {
+    stop("Wrong number of groups provided")
+  }
+  if (is.null(groups)) {
+    groups <- 1:ngroups
+  }
+  result <- rep(NA, nlevels)
+  names(result) <- levels(x)
+  previous_end <- 0
+  for (group in groups) {
+    curr_end <- min(previous_end + 4, nlevels)
+    levels_i <- (previous_end + 1):curr_end
+    result[levels_i] <- group
+    previous_end <- curr_end
+  }
+  return(result)
+}
+
 #' The colours I use
 #'@return A list of lists of colours, organized by darkness level
 #'@export
 emd_colours <- function() {
   list(
     lightest=list(
+      orange="#FFD86D",
+      blue="#BBDDF0",
       turquoise="#D1EBE9",
       magenta="#FFE0D7",
       green="#C0D4A2",
-      blue="#BBDDF0",
-      yellow="#FFFE59",
-      orange="#FFD26C"
+      yellow="#FFFE59"
     ),
     light=list(
-      turquoise="#28D1C1",
-      blue="#4E89B2",
+      turquoise="#75DCE5",
+      brown="#CFB370",
       orange="#E69F00",
-      brown="#B69070"
+      turquoise2="#28D1C1"
     ),
     dark=list(
-      blue="#005EA2",
-      maroon="#A44444"
+      blue="#579ECF",
+      maroon="#A47244"
     ),
     darkest=list(
-      grey="#444444",
-      maroon="#6A0000",
-      purple="#370460"
+      grey="#333333",
+      purple="#370460",
+      blue="#005EA2",
+      grey2="#444444",
+      maroon="#6A0000"
     ))
 }
 
@@ -40,35 +91,29 @@ emd_palette <- function(var) {
   if (!is.factor(var)) {
     var <- factor(var)
   }
-  if (length(levels(var)) == 2) {
-    result <- c(emd_colours()$light$orange, emd_colours()$dark$blue)
-  } else if (length(levels(var)) == 3) {
-    result <- c(emd_colours()$lightest$orange, emd_colours()$dark$blue,
-                emd_colours()$darkest$grey)
-  } else if (length(levels(var)) == 4) {
-    result <- c(emd_colours()$lightest$orange,
-                emd_colours()$light$turquoise,
-                emd_colours()$dark$blue,
-                emd_colours()$darkest$grey)
-  } else if (length(levels(var)) == 5) {
-    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
-                emd_colours()$dark$blue, emd_colours()$darkest$grey,
-                emd_colours()$lightest$green)
-  } else if (length(levels(var)) == 6) {
-    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
-                emd_colours()$dark$blue, emd_colours()$darkest$grey,
-                emd_colours()$lightest$green, emd_colours()$darkest$purple)
-  } else if (length(levels(var)) == 7) {
-    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
-                emd_colours()$dark$blue, emd_colours()$darkest$grey,
-                emd_colours()$lightest$green,
-                emd_colours()$dark$maroon, emd_colours()$darkest$purple)
-  } else if (length(levels(var)) == 8) {
-    result <- c(emd_colours()$lightest$orange,  emd_colours()$light$turquoise,
-                emd_colours()$dark$blue, emd_colours()$darkest$grey,
-                emd_colours()$lightest$green, emd_colours()$light$orange,
-                emd_colours()$dark$maroon, emd_colours()$darkest$purple)
+  if (length(levels(var)) > 8) {
+    result <- c()
+    first <- 1
+    last <- 0
+    while (last < length(levels(var))) {
+      last <- min(first+8, length(levels(var)))
+      sub_var <- factor(levels(var)[first:last], levels=levels(var)[first:last])
+      result <- c(result, emd_palette(sub_var))
+      first <- last + 1
+    }
+    return(result)
   }
+  if (length(levels(var)) > 4) {
+    last <- min(8, length(levels(var)))
+    colours_1 <- c(emd_colours()$lightest[[1]], emd_colours()$light[[1]],
+                   emd_colours()$dark[[1]], emd_colours()$darkest[[1]])
+    colours_2 <- c(emd_colours()$lightest[[2]], emd_colours()$light[[2]],
+                   emd_colours()$dark[[2]], emd_colours()$darkest[[2]])[1:(last-4)]
+    result <- c(colours_1, colours_2)
+    return(structure(result, names=levels(var)))
+  }
+  result <- c(emd_colours()$lightest[[1]], emd_colours()$light[[1]],
+                 emd_colours()$dark[[1]], emd_colours()$darkest[[1]])[]
   return(structure(result, names=levels(var)))
 }
 

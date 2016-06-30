@@ -3,6 +3,7 @@
 export(emd_colours)
 export(emd_palette)
 export(emd_theme)
+export(factor_grouped)
 export(hist_area_line)
 export(hist_overlapping)
 export(linear_2x2_sumcode_barplot)
