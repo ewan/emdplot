@@ -107,13 +107,22 @@ emd_palette <- function(var) {
     last <- min(8, length(levels(var)))
     colours_1 <- c(emd_colours()$lightest[[1]], emd_colours()$light[[1]],
                    emd_colours()$dark[[1]], emd_colours()$darkest[[1]])
-    colours_2 <- c(emd_colours()$lightest[[2]], emd_colours()$light[[2]],
-                   emd_colours()$dark[[2]], emd_colours()$darkest[[2]])[1:(last-4)]
+    if (length(levels(var)) == 6) {
+      colours_2 <- c(emd_colours()$lightest[[2]], emd_colours()$darkest[[2]])
+    } else {
+      colours_2 <- c(emd_colours()$lightest[[2]], emd_colours()$light[[2]],
+                     emd_colours()$dark[[2]], emd_colours()$darkest[[2]])[1:(last-4)]
+    }
     result <- c(colours_1, colours_2)
     return(structure(result, names=levels(var)))
   }
+  if (length(levels(var)) == 2) {
+    result <- c(emd_colours()$lightest[[1]], emd_colours()$dark[[1]])
+    return(structure(result, names=levels(var)))
+  }
+  last <- min(4, length(levels(var)))
   result <- c(emd_colours()$lightest[[1]], emd_colours()$light[[1]],
-                 emd_colours()$dark[[1]], emd_colours()$darkest[[1]])[]
+                 emd_colours()$dark[[1]], emd_colours()$darkest[[1]])[1:last]
   return(structure(result, names=levels(var)))
 }
 
