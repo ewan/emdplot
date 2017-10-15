@@ -53,29 +53,20 @@ factor_grouped <- function(x, groups=NULL) {
 emd_colours <- function() {
   list(
     lightest=list(
-      orange="#FFD86D",
-      blue="#BBDDF0",
-      turquoise="#D1EBE9",
-      magenta="#FFE0D7",
-      green="#C0D4A2",
-      yellow="#FFFE59"
+      yellow="#FFE385",
+      periwinkle="#F7CACA"
     ),
     light=list(
-      turquoise="#75DCE5",
-      brown="#CFB370",
-      orange="#E69F00",
-      turquoise2="#28D1C1"
+      lightbrown="#CFB370",
+      lightblue="#8FC0E3"
     ),
     dark=list(
-      blue="#579ECF",
-      maroon="#A47244"
+      brown="#A47244",
+      blue="#579ECF"
     ),
     darkest=list(
-      grey="#333333",
-      purple="#370460",
-      blue="#005EA2",
-      grey2="#444444",
-      maroon="#6A0000"
+      blackbrown="#2E2303",
+      blackblue="#02233D"
     ))
 }
 
@@ -117,12 +108,12 @@ emd_palette <- function(var) {
     return(structure(result, names=levels(var)))
   }
   if (length(levels(var)) == 2) {
-    result <- c(emd_colours()$lightest[[1]], emd_colours()$dark[[1]])
+    result <- c(emd_colours()$lightest[[1]], emd_colours()$dark[[2]])
     return(structure(result, names=levels(var)))
   }
   last <- min(4, length(levels(var)))
-  result <- c(emd_colours()$lightest[[1]], emd_colours()$light[[1]],
-                 emd_colours()$dark[[1]], emd_colours()$darkest[[1]])[1:last]
+  result <- c(emd_colours()$lightest[[1]], emd_colours()$light[[2]],
+                 emd_colours()$dark[[1]], emd_colours()$darkest[[2]])[1:last]
   return(structure(result, names=levels(var)))
 }
 
@@ -132,7 +123,7 @@ emd_palette <- function(var) {
 #' @return A ggplot theme object
 #' @export
 emd_theme <- function(text_size=18) {
-  return(theme_bw() + theme(text=element_text(size=text_size),
+  return(ggplot2::theme_bw() + ggplot2::theme(text=ggplot2::element_text(size=text_size),
                             legend.position="bottom"))
 }
 
@@ -168,10 +159,10 @@ hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="
   }
   d <- d[!is.na(d$x),]
 
-  p <- ggplot(d, aes(x=x))
-  p <- p + stat_bin(aes_string(y=y_str_sbin, fill="group"), binwidth=binwidth,
+  p <- ggplot2::ggplot(d, ggplot2::aes(x=x))
+  p <- p + ggplot2::stat_bin(ggplot2::aes_string(y=y_str_sbin, fill="group"), binwidth=binwidth,
                     position='identity', geom="area", colour="black", lwd=0.4*line_width)
-  p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
+  p <- p + ggplot2::scale_fill_manual(values=colour_palette, name=var_group_name,
                              breaks=levels(d$group))
   if (!highlight_all) {
     line_levs <- levels(d$group)[-length(levels(d$group))]
@@ -180,23 +171,23 @@ hist_area_line <- function(x, group=NULL, var_measure_name="x", var_group_name="
   }
   for (lev in line_levs) {
     d_lev <- d[d$group == lev,]
-    p <- p + stat_bin(data=d_lev, aes_string(y=y_str_sbin), position="identity",
+    p <- p + ggplot2::stat_bin(data=d_lev, ggplot2::aes_string(y=y_str_sbin), position="identity",
                       geom="line", colour="black", lwd=line_width, binwidth=binwidth)
-    p <- p + stat_bin(data=d_lev, aes_string(y=y_str_sbin), position="identity",
+    p <- p + ggplot2::stat_bin(data=d_lev, ggplot2::aes_string(y=y_str_sbin), position="identity",
                       geom="line", colour=colour_palette[[lev]],
                       lwd=line_width*0.4, binwidth=binwidth)
   }
-  p <- p + scale_colour_manual(values=colour_palette, name=var_group_name,
+  p <- p + ggplot2::scale_colour_manual(values=colour_palette, name=var_group_name,
                                breaks=levels(d$group))
-  p <- p + xlab(var_measure_name)
+  p <- p + ggplot2::xlab(var_measure_name)
   if (y_type == "ndensity") {
-    p <- p + ylab("Normalized Empirical Density")
+    p <- p + ggplot2::ylab("Normalized Empirical Density")
   } else if (y_type == "density") {
-    p <- p + ylab("Empirical Density")
+    p <- p + ggplot2::ylab("Empirical Density")
   } else if (y_type == "count") {
-    p <- p + ylab("Count")
+    p <- p + ggplot2::ylab("Count")
   } else if (y_type == "ncount") {
-    p <- p + ylab("Normalized Count")
+    p <- p + ggplot2::ylab("Normalized Count")
   }
   return(p)
 }
@@ -229,27 +220,27 @@ hist_overlapping <- function(x, group=NULL, var_measure_name="x", var_group_name
   }
   d <- d[!is.na(d$x),,drop=F]
   if (!is.null(group)) {
-    p <- ggplot(d, aes(x=x, fill=group))
+    p <- ggplot2::ggplot(d, ggplot2::aes(x=x, fill=group))
   } else {
-    p <- ggplot(d, aes(x=x))
+    p <- ggplot2::ggplot(d, ggplot2::aes(x=x))
   }
-  p <- p + geom_histogram(position="identity", alpha=0.40, bins=bins)
+  p <- p + ggplot2::geom_histogram(position="identity", alpha=0.40, bins=bins)
   if (!is.null(group)) {
-    p <- p + scale_fill_manual(values=colour_palette, name=var_group_name,
+    p <- p + ggplot2::scale_fill_manual(values=colour_palette, name=var_group_name,
                                breaks=levels(d$group))
-    p <- p + geom_histogram(position="identity", aes(colour=group), bins=bins,
+    p <- p + ggplot2::geom_histogram(position="identity", ggplot2::aes(colour=group), bins=bins,
                             alpha=0, lwd=line_width)
-    p <- p + geom_histogram(position="identity", aes(group=group), bins=bins,
+    p <- p + ggplot2::geom_histogram(position="identity", ggplot2::aes(group=group), bins=bins,
                             alpha=0, lwd=min(1, line_width/2.), colour="black")
-    p <- p + scale_colour_manual(values=colour_palette, name=var_group_name)
+    p <- p + ggplot2::scale_colour_manual(values=colour_palette, name=var_group_name)
   } else {
-    p <- p + geom_histogram(position="identity", colour=emd_colours()$dark$blue, bins=bins,
+    p <- p + ggplot2::geom_histogram(position="identity", colour=emd_colours()$dark$blue, bins=bins,
                             alpha=0, lwd=line_width)
-    p <- p + geom_histogram(position="identity", bins=bins,
+    p <- p + ggplot2::geom_histogram(position="identity", bins=bins,
                             alpha=0, lwd=min(1, line_width/2.), colour="black")
   }
-  p <- p + xlab(var_measure_name)
-  p <- p + ylab("Count")
+  p <- p + ggplot2::xlab(var_measure_name)
+  p <- p + ggplot2::ylab("Count")
   return(p)
 }
 
@@ -319,16 +310,16 @@ linear_2x2_sumcode_barplot <- function(b0, bx1, bx2, bx1x2,
   d$component <- factor(d$component, c("β0", bx1_name, bx2_name, bx1x2_name, "Sum"))
   d_pos <- d[d$prediction >= 0,]
   d_neg <- d[d$prediction < 0,]
-  p <- ggplot()
-  p <- p + geom_bar(data=d_pos, aes(x=type, fill=component, y=prediction),
+  p <- ggplot2::ggplot()
+  p <- p + ggplot2::geom_bar(data=d_pos, ggplot2::aes(x=type, fill=component, y=prediction),
                     stat="identity", position="stack", lwd=1, colour="black")
-  p <- p + geom_bar(data=d_neg, aes(x=type, fill=component, y=prediction),
+  p <- p + ggplot2::geom_bar(data=d_neg, ggplot2::aes(x=type, fill=component, y=prediction),
                     stat="identity", position="stack", lwd=1, colour="black")
-  p <- p + geom_hline(yintercept=0, lwd=1.5)
-  p <- p + scale_fill_manual(values=emd_palette(d$component), name="Model component")
-  p <- p + facet_wrap(~ cell, ncol=9)
-  p <- p + xlab("Case")
-  p <- p + ylab("Model coefficient/prediction value")
+  p <- p + ggplot2::geom_hline(yintercept=0, lwd=1.5)
+  p <- p + ggplot2::scale_fill_manual(values=emd_palette(d$component), name="Model component")
+  p <- p + ggplot2::facet_wrap(~ cell, ncol=9)
+  p <- p + ggplot2::xlab("Case")
+  p <- p + ggplot2::ylab("Model coefficient/prediction value")
   return(p)
 }
 
@@ -345,9 +336,9 @@ linear_2x2_sumcode_sum_barplot <- function(b0, bx1, bx2, bx1x2) {
   dx1Bx2B <- data.frame(cell="x1Bx2B", prediction=b0-bx1-bx2+bx1x2)
   d <- do.call("rbind", list(d0, dx1A, dx1B, dx2A, dx2B, dx1Ax2A, dx1Bx2A,
                              dx1Ax2B, dx1Bx2B))
-  p <- ggplot(data=d, aes(x=cell, y=prediction))
-  p <- p + geom_bar(stat="identity", position="stack")
-  p <- p + geom_hline(yintercept=0)
+  p <- ggplot2::ggplot(data=d, ggplot2::aes(x=cell, y=prediction))
+  p <- p + ggplot2::geom_bar(stat="identity", position="stack")
+  p <- p + ggplot2::geom_hline(yintercept=0)
   return(p)
 }
 
